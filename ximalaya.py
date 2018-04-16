@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import os
-import wget
 
 
 # 冬吴同学会
@@ -36,7 +35,7 @@ def get_mp3_info(js_url):
 
 
 def download(file_name, mp3_path):
-    os.chdir(r'D:/ximalaya/')
+    os.chdir(os.getcwd())
     if os.path.exists(file_name):
         return 'Already exists'
 
@@ -82,6 +81,4 @@ elif cmd == 'd':
     download_ablum(1)
 else :
     pass
-# for js in json_url:
 
-#     download_mp3(js)d
