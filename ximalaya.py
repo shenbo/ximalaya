@@ -1,4 +1,5 @@
 import requests
+import sys
 from bs4 import BeautifulSoup
 import os
 
@@ -9,21 +10,28 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/57.0.
 res = requests.get(album_url, headers=headers)
 
 # 获得专辑名称
-soup = BeautifulSoup(res.content, 'lxml')
+# soup = BeautifulSoup(res.content, 'lxml')
+soup = BeautifulSoup(res.content, 'html.parser')
 print(soup.title.string)
 
 # 获得各期节目ID，生成json链接 
 mp3_ids = soup.select_one('.personal_body').attrs['sound_ids']
+print('共有{}期节目'.format(len(mp3_ids)))
+
 json_url = 'http://www.ximalaya.com/tracks/{id}.json'
 json_urls = [json_url.format(id=i) for i in mp3_ids.split(',')]
 # print(json_urls)
 
 
-def albums_list():
+def albums_list(num = 10):
     mp3_titles = soup.find_all('a',{'class': 'title'})
-    print('--节目清单--') 
-    for link in mp3_titles:  
+    if num > len(mp3_titles):
+        num = len(mp3_titles)
+
+    print('--节目清单--')
+    for link in mp3_titles[0:num]:
         print(link.get('title'))
+
 
 
 def get_mp3_info(js_url):
@@ -47,19 +55,19 @@ def download(file_name, mp3_path):
                 print('response error with', file_name)
 
             total_length = response.headers.get('content-length')
-            print(file_name, 'total size: ', total_length, '--')
+            print(file_name, ', file size: ', int(total_length)/1000000.0, ' MB')
 
             chunk_size = 1024
             for block in response.iter_content(chunk_size):
                 f.write(block)
-            print('ok ---', file_name)
+            print('ok ---')
 
     except Exception as e:
-        print('other error with', filename)
-        os.remove(filename)
+        print('other error with', file_name)
+        os.remove(file_name)
 
 
-def download_ablum(num=20):
+def download_ablum(num=3):
     if len(json_urls) < num:
         num = len(json_urls)
     for i in json_urls[0:num]:
@@ -68,17 +76,17 @@ def download_ablum(num=20):
 
 
 hint = '\n >> 请输入命令...\n'\
-    '    --d        下载最近的20期节目...\n'\
-    '    --l        列出所有节目...\n'
+    '    --d        下载近期节目...\n'\
+    '    --l        列出所有节目...\n'\
+    ' >> '
 
 
 cmd = input(hint)
 if cmd == 'q':
     sys.exit(1)
 elif cmd == 'l':
-    albums_list()
+    albums_list(10)
 elif cmd == 'd':
-    download_ablum(1)
+    download_ablum(5)
 else :
     pass
-
