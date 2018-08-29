@@ -19,7 +19,7 @@ def get_mp3_list():
     print(soup.title.string)
 
     # 网页中关于节目描述的div格式
-    # <div class="e-2304105070 text">
+    # <div class="dOi2 text">
     #     <a title="No.0 xxxxxxxxxxx" href="/shangye/8475135/idxxxxxxxx">No.0 xxxxxxxxxx</a>
     # </div>
 
@@ -42,6 +42,7 @@ def get_mp3_list():
 # 下载单个节目
 def download_mp3(id):
     mp3_info = requests.get(json_url.format(id), headers=headers).json()
+    # 替换文件名中的特殊字符
     filename = mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
     path = mp3_info['play_path']
 
@@ -81,17 +82,5 @@ def download_ablum(num=1):
         # print(i['id'])
         download_mp3(i['id'])
 
+# 下载近期节目
 download_ablum(5)
-
-# hint = '\n >> 请输入命令...\n'\
-#     '    --d        下载近期节目...\n'\
-#     ' >> '
-#
-#
-# cmd = input(hint)
-# if cmd == 'q':
-#     sys.exit(1)
-# elif cmd == 'd':
-#     download_ablum(5)
-# else :
-#     pass
