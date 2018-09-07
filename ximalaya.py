@@ -24,7 +24,7 @@ def get_mp3_list():
     # </div>
 
     # 获得节目列表
-    mp3_div = soup.find_all('div',{'class': 'e-2304105070 text'})
+    mp3_div = soup.find_all('div',{'class': 'dOi2 text'})
     mp3_list = []
     for div in mp3_div:
         # 获得节目名称、ID、JSON
@@ -33,7 +33,12 @@ def get_mp3_list():
 
         mp3_info = {'title': title, 'id': id}
         mp3_list.append(mp3_info)
-    # print('--节目清单--\n',mp3_list)
+    if mp3_list:
+        print('--节目清单--\n', mp3_list[0:9])
+    else:
+        print('--没有发现节目!--\n')
+        print('----------------\n')
+    
     return mp3_list
 
 # get_mp3_list()
@@ -83,4 +88,4 @@ def download_ablum(num=1):
         download_mp3(i['id'])
 
 # 下载近期节目
-download_ablum(5)
+download_ablum(8)
