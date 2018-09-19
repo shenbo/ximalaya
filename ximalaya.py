@@ -49,7 +49,7 @@ def download_mp3(id):
     mp3_info = requests.get(json_url.format(id), headers=headers).json()
     # 替换文件名中的特殊字符
     name = mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
-    filename = os.path.join('/home/ubuntu/ximalaya', name)
+    filename = os.path.join('/home/ubuntu/Sync/ximalaya/', name)
     path = mp3_info['play_path']
 
     if os.path.exists(filename):
