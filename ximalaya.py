@@ -24,7 +24,7 @@ def get_mp3_list():
     # </div>
 
     # 获得节目列表
-    mp3_div = soup.find_all('div',{'class': 'dOi2 text'})
+    mp3_div = soup.find_all('div',{'class': 'text rC5T'})
     mp3_list = []
     for div in mp3_div:
         # 获得节目名称、ID、JSON
