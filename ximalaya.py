@@ -38,7 +38,7 @@ def get_mp3_list():
     else:
         print('--没有发现节目!--\n')
         print('----------------\n')
-    
+
     return mp3_list
 
 # get_mp3_list()
@@ -48,10 +48,10 @@ def get_mp3_list():
 def download_mp3(id):
     mp3_info = requests.get(json_url.format(id), headers=headers).json()
     # 替换文件名中的特殊字符
-    filename = mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
+    name = mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
+    filename = os.path.join('/home/ubuntu/Sync/ximalaya/', name)
     path = mp3_info['play_path']
 
-    os.chdir(os.getcwd())
     if os.path.exists(filename):
         return 'Already exists'
 
