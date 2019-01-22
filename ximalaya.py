@@ -3,9 +3,10 @@ import sys
 from bs4 import BeautifulSoup
 import os
 
-
 # 冬吴同学会 @ 喜马拉雅 API_url
-album_url = 'http://www.ximalaya.com/2452186/album/8475135'
+
+album_url = 'https://www.ximalaya.com/shangye/8475135/'         # 第一季
+album_url = 'https://www.ximalaya.com/shangye/16861863/'        # 第二季
 json_url = 'http://www.ximalaya.com/tracks/{}.json'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/57.0.2987.133'}
 
@@ -19,12 +20,12 @@ def get_mp3_list():
     print(soup.title.string)
 
     # 网页中关于节目描述的div格式
-    # <div class="dOi2 text">
+    # <div class="text rC5T">
     #     <a title="No.0 xxxxxxxxxxx" href="/shangye/8475135/idxxxxxxxx">No.0 xxxxxxxxxx</a>
     # </div>
 
     # 获得节目列表
-    mp3_div = soup.find_all('div',{'class': 'text rC5T'})
+    mp3_div = soup.find_all('div', {'class': 'text rC5T'})
     mp3_list = []
     for div in mp3_div:
         # 获得节目名称、ID、JSON
@@ -40,6 +41,7 @@ def get_mp3_list():
         print('----------------\n')
 
     return mp3_list
+
 
 # get_mp3_list()
 
@@ -63,7 +65,7 @@ def download_mp3(id):
                 print('response error with', filename)
 
             total_length = response.headers.get('content-length')
-            print(filename, ', file size: ', int(total_length)/1000000.0, ' MB')
+            print(filename, ', file size: ', int(total_length) / 1000000.0, ' MB')
 
             chunk_size = 1024
             for block in response.iter_content(chunk_size):
@@ -73,6 +75,7 @@ def download_mp3(id):
     except Exception as e:
         print('other error with', filename)
         os.remove(filename)
+
 
 # download_mp3('90460149')
 
@@ -87,5 +90,6 @@ def download_ablum(num=1):
         # print(i['id'])
         download_mp3(i['id'])
 
+
 # 下载近期节目
-download_ablum(8)
+download_ablum(10)
