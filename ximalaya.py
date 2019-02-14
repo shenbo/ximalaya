@@ -1,57 +1,48 @@
-import requests
-import sys
-from bs4 import BeautifulSoup
 import os
 
-# 冬吴同学会 @ 喜马拉雅 API_url
+import requests
+from bs4 import BeautifulSoup
 
-album_url = 'https://www.ximalaya.com/shangye/8475135/'         # 第一季
-album_url = 'https://www.ximalaya.com/shangye/16861863/'        # 第二季
+# 冬吴同学会 @ 喜马拉雅 API_url
+album_url = 'https://www.ximalaya.com/shangye/8475135/'  # 第一季
+album_url = 'https://www.ximalaya.com/shangye/16861863/'  # 第二季
 json_url = 'http://www.ximalaya.com/tracks/{}.json'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/57.0.2987.133'}
 
 
 # 获得专辑中的节目列表
 def get_mp3_list():
-    # 获得专辑名称
     res = requests.get(album_url, headers=headers)
-    # soup = BeautifulSoup(res.content, 'lxml')
-    soup = BeautifulSoup(res.content, 'html.parser')
-    print(soup.title.string)
+    soup = BeautifulSoup(res.content, 'html.parser')  # 解析器：'lxml'
+    print(soup.title.string)  # 获得专辑名称
 
     # 网页中关于节目描述的div格式
-    # <div class="text rC5T">
-    #     <a title="No.0 xxxxxxxxxxx" href="/shangye/8475135/idxxxxxxxx">No.0 xxxxxxxxxx</a>
+    # <div class="text xxxx">
+    #     <a title="No.0 xxxxxxxxxxx" href="/shangye/xxxxx/xxxxx">No.0 xxxxxxxxxx</a>
     # </div>
 
     # 获得节目列表
-    mp3_div = soup.find_all('div', {'class': 'text rC5T'})
     mp3_list = []
-    for div in mp3_div:
-        # 获得节目名称、ID、JSON
-        title = div.a.get('title')
-        id = div.a.get('href').split('/')[-1]
 
-        mp3_info = {'title': title, 'id': id}
-        mp3_list.append(mp3_info)
+    mp3_div = soup.find_all('div', {'class': ['text', ' ']})
+    for div in mp3_div:
+        title = div.a.get('title')  # 获得节目名称
+        id = div.a.get('href').split('/')[-1]  # 获得节目ID
+        mp3_list.append({'title': title, 'id': id})
+
     if mp3_list:
-        print('--节目清单--\n', mp3_list[0:9])
+        print('--节目清单--\n', mp3_list[0:5])
     else:
-        print('--没有发现节目!--\n')
-        print('----------------\n')
+        print('-没发现节目!-\n', mp3_div[0:5], '-------\n')
 
     return mp3_list
-
-
-# get_mp3_list()
 
 
 # 下载单个节目
 def download_mp3(id):
     mp3_info = requests.get(json_url.format(id), headers=headers).json()
     # 替换文件名中的特殊字符
-    name = mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
-    filename = name
+    filename = mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
     path = mp3_info['play_path']
 
     if os.path.exists(filename):
@@ -77,19 +68,16 @@ def download_mp3(id):
         os.remove(filename)
 
 
-# download_mp3('90460149')
-
-
 # 下载专辑
 def download_ablum(num=1):
-    mp3_list = get_mp3_list()
-    if len(mp3_list) < num:
-        num = len(mp3_list)
+    lst = get_mp3_list()
+    # print(lst)
+    num = min(len(lst), num)
 
-    for i in mp3_list[0:num]:
+    for i in lst[0:num]:
         # print(i['id'])
         download_mp3(i['id'])
 
 
 # 下载近期节目
-download_ablum(10)
+download_ablum(5)
