@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 album_url = 'https://www.ximalaya.com/shangye/8475135/'  # 第一季
 album_url = 'https://www.ximalaya.com/shangye/16861863/'  # 第二季
 json_url = 'http://www.ximalaya.com/tracks/{}.json'
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/57.0.2987.133'}
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3702.0'}
 
 
 # 获得专辑中的节目列表
@@ -42,7 +42,7 @@ def get_mp3_list():
 def download_mp3(id):
     mp3_info = requests.get(json_url.format(id), headers=headers).json()
     # 替换文件名中的特殊字符
-    filename = mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
+    filename = 'Sync/mp3/' mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
     path = mp3_info['play_path']
 
     if os.path.exists(filename):
