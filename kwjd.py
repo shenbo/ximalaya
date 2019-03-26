@@ -83,7 +83,7 @@ for mp3 in mp3_list[:1]:
     # youtube-dl -v -F https://www.bilibili.com/video/av45133914
 
     cmd = 'youtube-dl -x -k --no-post-overwrites '
-    cmd += '-o ~/Sync/ytb/{}.%(ext)s '.format(mp3['title'])
+    cmd += '-o Sync/ytb/{}.mp4 '.format(mp3['title'])
     cmd += video_url
     print(cmd)
     p = subprocess.Popen(cmd, shell=True)
