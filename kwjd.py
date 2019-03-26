@@ -3,6 +3,7 @@ import subprocess
 import requests
 from bs4 import BeautifulSoup
 import re
+import json
 
 # 坑王驾到 @ pengdouw.com
 # http://www.pengdouw.com/kengwangjiadao/
@@ -88,6 +89,11 @@ for mp3 in mp3_list[:3]:
 
     desp += '- {}    已下载\n'.format(mp3['title'])
 
-api = 'https://sc.ftqq.com/xxx.send'
-send_data = {'text': '坑王', 'desp': desp}
-requests.post(api, headers=headers, data=send_data)
+with open('web_monitor/config.json', encoding='utf-8') as f:
+        config = json.load(f)
+        key = config['ftqq']
+        print(key)
+
+        api = 'https://sc.ftqq.com/{}.send'.format(key)
+        send_data = {'text': '坑王', 'desp': desp}
+        requests.post(api, headers=headers, data=send_data)

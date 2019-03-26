@@ -79,10 +79,15 @@ def download_ablum(num=1):
         # print(i['id'])
         desp += download_mp3(i['id'])
     print(desp)
+    
+    with open('web_monitor/config.json', encoding='utf-8') as f:
+        config = json.load(f)
+        key = config['ftqq']
+        print(key)
 
-    api = 'https://sc.ftqq.com/xxx.send'
-    send_data = {'text': '冬吴_喜马拉雅', 'desp': desp}
-    requests.post(api, headers=headers, data=send_data)
+        api = 'https://sc.ftqq.com/{}.send'.format(key)
+        send_data = {'text': '冬吴_喜马拉雅', 'desp': desp}
+        requests.post(api, headers=headers, data=send_data)
 
 
 # 下载近期节目
