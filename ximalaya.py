@@ -74,7 +74,7 @@ def download_ablum(num=1):
     # print(lst)
     num = min(len(lst), num)
 
-    desp = '### 冬吴_喜马拉雅\n\n'
+    desp = '\n'
     for i in lst[0:num]:
         # print(i['id'])
         desp += download_mp3(i['id'])

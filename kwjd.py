@@ -23,7 +23,7 @@ mp3_a = mp3_div.ul.find_all('a')
 for a in mp3_a[1::2]:
     title = a.get('title')
     href = a.get('href')
-    print({'title': title, 'href': href})
+    # print({'title': title, 'href': href})
     mp3_list.append({'title': title, 'href': href})
 
 # 获取下载链接
