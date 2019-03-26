@@ -7,7 +7,8 @@ from bs4 import BeautifulSoup
 album_url = 'https://www.ximalaya.com/shangye/8475135/'  # 第一季
 album_url = 'https://www.ximalaya.com/shangye/16861863/'  # 第二季
 json_url = 'http://www.ximalaya.com/tracks/{}.json'
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3702.0'}
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko'}
 
 
 # 获得专辑中的节目列表
@@ -42,30 +43,29 @@ def get_mp3_list():
 def download_mp3(id):
     mp3_info = requests.get(json_url.format(id), headers=headers).json()
     # 替换文件名中的特殊字符
-    filename = 'Sync/mp3/' mp3_info['title'].replace('\"', '“').replace(':', '：') + '.m4a'
+    title = mp3_info['title'].replace('\"', '“').replace(':', '：')
+    filename = 'Sync/mp3/{}.m4a'.format(title)
+    filename = '{}.m4a'.format(title)
     path = mp3_info['play_path']
 
     if os.path.exists(filename):
-        return 'Already exists'
+        return '- {}    已存在\n'.format(title)
 
     # http://stackoverflow.com/questions/13137817/how-to-download-image-using-requests
     try:
         with open(filename, 'wb') as f:
             response = requests.get(path, stream=True)
-            if not response.ok:
-                print('response error with', filename)
+            print(path)
+            filesize = int(response.headers.get('content-length')) / 1000000.0
+            print('--- 正在下载 {} : {.2f} MB'.format(filename, filesize))
 
-            total_length = response.headers.get('content-length')
-            print(filename, ', file size: ', int(total_length) / 1000000.0, ' MB')
-
-            chunk_size = 1024
-            for block in response.iter_content(chunk_size):
+            for block in response.iter_content(1024):       # chunk_size = 1024
                 f.write(block)
-            print('ok ---')
+            return '- {}    已下载\n'.format(title)
 
     except Exception as e:
-        print('other error with', filename)
         os.remove(filename)
+        return '- {}    下载出错\n'.format(title)
 
 
 # 下载专辑
@@ -74,9 +74,15 @@ def download_ablum(num=1):
     # print(lst)
     num = min(len(lst), num)
 
+    desp = '### 冬吴_喜马拉雅\n\n'
     for i in lst[0:num]:
         # print(i['id'])
-        download_mp3(i['id'])
+        desp += download_mp3(i['id'])
+    print(desp)
+
+    # api = 'https://sc.ftqq.com/xxx.send'
+    # send_data = {'text': '冬吴_喜马拉雅', 'desp': desp}
+    # requests.post(api, headers=headers, data=send_data)
 
 
 # 下载近期节目
