@@ -68,7 +68,7 @@ for mp3 in mp3_list[:3]:
     </div>
     """
     html = res.content.decode('gbk')    
-    pattern = re.compile(r'https:\S*.m3u8')
+    pattern = re.compile(r'http\S*.m3u8')
     res = pattern.findall(html)
     video_url = res[0]
 
