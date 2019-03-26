@@ -44,8 +44,8 @@ def download_mp3(id):
     mp3_info = requests.get(json_url.format(id), headers=headers).json()
     # 替换文件名中的特殊字符
     title = mp3_info['title'].replace('\"', '“').replace(':', '：')
-    filename = 'Sync/mp3/{}.m4a'.format(title)
     filename = '{}.m4a'.format(title)
+    filename = 'Sync/mp3/{}.m4a'.format(title)
     path = mp3_info['play_path']
 
     if os.path.exists(filename):
