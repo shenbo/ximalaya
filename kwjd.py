@@ -29,7 +29,7 @@ for a in mp3_a[1::2]:
 
 desp = '\n'
 # 获取下载链接
-for mp3 in mp3_list[:3]:
+for mp3 in mp3_list[:1]:
     url = 'http://www.pengdouw.com' + mp3['href']
     res = requests.get(url, headers=headers)
 
@@ -82,7 +82,7 @@ for mp3 in mp3_list[:3]:
     #
     # youtube-dl -v -F https://www.bilibili.com/video/av45133914
 
-    cmd = 'youtube-dl -x -k --no-post-overwrites ' + video_url
+    cmd = 'youtube-dl -x -k --no-post-overwrites -o ~/Sync/ytb/{}.%(ext)s'mp3['title'] + video_url
     print(cmd)
     p = subprocess.Popen(cmd, shell=True)
     print(p)
