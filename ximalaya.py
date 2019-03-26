@@ -80,9 +80,9 @@ def download_ablum(num=1):
         desp += download_mp3(i['id'])
     print(desp)
 
-    # api = 'https://sc.ftqq.com/xxx.send'
-    # send_data = {'text': '冬吴_喜马拉雅', 'desp': desp}
-    # requests.post(api, headers=headers, data=send_data)
+    api = 'https://sc.ftqq.com/xxx.send'
+    send_data = {'text': '冬吴_喜马拉雅', 'desp': desp}
+    requests.post(api, headers=headers, data=send_data)
 
 
 # 下载近期节目

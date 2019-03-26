@@ -26,6 +26,7 @@ for a in mp3_a[1::2]:
     # print({'title': title, 'href': href})
     mp3_list.append({'title': title, 'href': href})
 
+desp = '\n'
 # 获取下载链接
 for mp3 in mp3_list[:3]:
     url = 'http://www.pengdouw.com' + mp3['href']
@@ -84,3 +85,9 @@ for mp3 in mp3_list[:3]:
     print(cmd)
     p = subprocess.Popen(cmd, shell=True)
     print(p)
+
+    desp += '- {}    已下载\n'.format(mp3['title'])
+
+api = 'https://sc.ftqq.com/xxx.send'
+send_data = {'text': '坑王', 'desp': desp}
+requests.post(api, headers=headers, data=send_data)
