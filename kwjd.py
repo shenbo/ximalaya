@@ -67,7 +67,7 @@ for mp3 in mp3_list[:1]:
         <br /><span style="color:#ff0000;"><strong>本站视频默认播放密码均为pengdouwcom</strong></span>
     </div>
     """
-    html = res.content.decode('gbk')    
+    html = res.content.decode('gbk')
     pattern = re.compile(r'http\S*.m3u8')
     res = pattern.findall(html)
     video_url = res[0]
@@ -82,7 +82,9 @@ for mp3 in mp3_list[:1]:
     #
     # youtube-dl -v -F https://www.bilibili.com/video/av45133914
 
-    cmd = 'youtube-dl -x -k --no-post-overwrites -o ~/Sync/ytb/{}.%(ext)s'mp3['title'] + video_url
+    cmd = 'youtube-dl -x -k --no-post-overwrites '
+    + '-o ~/Sync/ytb/{}.%(ext)s'.format(mp3['title'])
+    + video_url
     print(cmd)
     p = subprocess.Popen(cmd, shell=True)
     print(p)
@@ -90,10 +92,10 @@ for mp3 in mp3_list[:1]:
     desp += '- {}    已下载\n'.format(mp3['title'])
 
 with open('web_monitor/config.json', encoding='utf-8') as f:
-        config = json.load(f)
-        key = config['ftqq']
-        print(key)
+    config = json.load(f)
+    key = config['ftqq']
+    print(key)
 
-        api = 'https://sc.ftqq.com/{}.send'.format(key)
-        send_data = {'text': '坑王', 'desp': desp}
-        requests.post(api, headers=headers, data=send_data)
+    api = 'https://sc.ftqq.com/{}.send'.format(key)
+    send_data = {'text': '坑王', 'desp': desp}
+    requests.post(api, headers=headers, data=send_data)
