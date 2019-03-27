@@ -1,5 +1,5 @@
 import os
-
+import json
 import requests
 from bs4 import BeautifulSoup
 
@@ -87,8 +87,8 @@ def download_ablum(num=1):
 
         api = 'https://sc.ftqq.com/{}.send'.format(key)
         send_data = {'text': '冬吴_喜马拉雅', 'desp': desp}
-        requests.post(api, headers=headers, data=send_data)
-
+        x = requests.post(api, headers=headers, data=send_data)
+        print(x)
 
 # 下载近期节目
 download_ablum(5)
