@@ -1,10 +1,6 @@
 import os
-<<<<<<< HEAD
 import subprocess
-
-=======
 import json
->>>>>>> bc9579b8f6748179c84095ef2969d1cc44bc6c8d
 import requests
 from bs4 import BeautifulSoup
 
@@ -51,18 +47,19 @@ def download_mp3(id):
     title = mp3_info['title'].replace('\"', '“').replace(':', '：')
     mp3_url = mp3_info['play_path']
 
-    filepath = '' + {}.m4a'.format(title)
+    filepath = 'Sync/mp3/'
+    filename = '{}.m4a'.format(title)
 
-    if os.path.exists(filepath):
+    if os.path.exists(filepath+filename):
         return '- {}    已存在\n'.format(title)
-    
+
     # 用 aira2 下载
-    cmd = 'aria2c {}  -o \"{}\"'.format(mp3_url,  filename)
+    cmd = 'aria2c {} -d {} -o \"{}\"'.format(mp3_url, filepath, filename)
     retcode = subprocess.call(cmd, shell=True)
-    if not retcode:        
+    if not retcode:
         return '- {}    已下载\n'.format(title)
     else:
-        os.remove(filepath)
+        os.remove(filepath+filename)
         return '- {}    下载出错: {}\n'.format(title, retcode)
 
 
@@ -77,7 +74,7 @@ def download_ablum(num=1):
         # print(i['id'])
         desp += download_mp3(i['id'])
     print(desp)
-    
+
     with open('web_monitor/config.json', encoding='utf-8') as f:
         config = json.load(f)
         key = config['ftqq']
@@ -88,5 +85,6 @@ def download_ablum(num=1):
         x = requests.post(api, headers=headers, data=send_data)
         print(x)
 
+
 # 下载近期节目
-download_ablum(3)
+download_ablum(1)
