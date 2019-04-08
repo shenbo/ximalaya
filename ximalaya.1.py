@@ -1,5 +1,4 @@
 import os
-import subprocess
 
 import requests
 from bs4 import BeautifulSoup
@@ -45,21 +44,28 @@ def download_mp3(id):
     mp3_info = requests.get(json_url.format(id), headers=headers).json()
     # 替换文件名中的特殊字符
     title = mp3_info['title'].replace('\"', '“').replace(':', '：')
-    mp3_url = mp3_info['play_path']
+    filename = '{}.m4a'.format(title)
+    filename = 'Sync/mp3/{}.m4a'.format(title)
+    path = mp3_info['play_path']
 
-    filepath = '' + {}.m4a'.format(title)
-
-    if os.path.exists(filepath):
+    if os.path.exists(filename):
         return '- {}    已存在\n'.format(title)
-    
-    # 用 aira2 下载
-    cmd = 'aria2c {}  -o \"{}\"'.format(mp3_url,  filename)
-    retcode = subprocess.call(cmd, shell=True)
-    if not retcode:        
-        return '- {}    已下载\n'.format(title)
-    else:
-        os.remove(filepath)
-        return '- {}    下载出错: {}\n'.format(title, retcode)
+
+    # http://stackoverflow.com/questions/13137817/how-to-download-image-using-requests
+    try:
+        with open(filename, 'wb') as f:
+            response = requests.get(path, stream=True)
+            print(path)
+            filesize = int(response.headers.get('content-length')) / 1000000.0
+            print('--- 正在下载 {} : {.2f} MB'.format(filename, filesize))
+
+            for block in response.iter_content(1024):       # chunk_size = 1024
+                f.write(block)
+            return '- {}    已下载\n'.format(title)
+
+    except Exception as e:
+        os.remove(filename)
+        return '- {}    下载出错\n'.format(title)
 
 
 # 下载专辑
@@ -85,4 +91,4 @@ def download_ablum(num=1):
 
 
 # 下载近期节目
-download_ablum(3)
+download_ablum(5)
