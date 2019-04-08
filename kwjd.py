@@ -98,4 +98,6 @@ with open('web_monitor/config.json', encoding='utf-8') as f:
 
     api = 'https://sc.ftqq.com/{}.send'.format(key)
     send_data = {'text': '坑王', 'desp': desp}
-    requests.post(api, headers=headers, data=send_data)
+    x = requests.post(api, headers=headers, data=send_data)
+    print(x)
+
