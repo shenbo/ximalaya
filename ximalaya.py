@@ -25,8 +25,9 @@ def get_mp3_list():
 
     # 获得节目列表
     mp3_list = []
-
-    mp3_div = soup.find_all('div', {'class': ['text', ' ']})
+    mp3_list_div = soup.find('div', {'class': ['sound-list-wrapper', ' '],
+                                     'id': ['anchor_sound_list']})
+    mp3_div = mp3_list_div.find_all_next('div', {'class': ['text', ' ']})
     for div in mp3_div:
         title = div.a.get('title')  # 获得节目名称
         id = div.a.get('href').split('/')[-1]  # 获得节目ID
@@ -47,10 +48,10 @@ def download_mp3(id):
     title = mp3_info['title'].replace('\"', '“').replace(':', '：')
     mp3_url = mp3_info['play_path']
 
-    filepath = 'Sync/mp3/'
+    filepath = '/home/pi/mp3/'
     filename = '{}.m4a'.format(title)
 
-    if os.path.exists(filepath+filename):
+    if os.path.exists(filepath + filename):
         return '- {}    已存在\n'.format(title)
 
     # 用 aira2 下载
@@ -59,7 +60,7 @@ def download_mp3(id):
     if not retcode:
         return '- {}    已下载\n'.format(title)
     else:
-        os.remove(filepath+filename)
+        os.remove(filepath + filename)
         return '- {}    下载出错: {}\n'.format(title, retcode)
 
 
@@ -75,7 +76,7 @@ def download_ablum(num=1):
         desp += download_mp3(i['id'])
     print(desp)
 
-    with open('web_monitor/config.json', encoding='utf-8') as f:
+    with open('/home/pi/config.json', encoding='utf-8') as f:
         config = json.load(f)
         key = config['ftqq']
         print(key)
@@ -87,4 +88,4 @@ def download_ablum(num=1):
 
 
 # 下载近期节目
-download_ablum(1)
+download_ablum(5)

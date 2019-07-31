@@ -1,5 +1,5 @@
 import os
-
+import json
 import requests
 from bs4 import BeautifulSoup
 
@@ -24,8 +24,9 @@ def get_mp3_list():
 
     # 获得节目列表
     mp3_list = []
-
-    mp3_div = soup.find_all('div', {'class': ['text', ' ']})
+    mp3_list_div = soup.find('div', {'class': ['sound-list-wrapper', ' '],
+                                     'id': ['anchor_sound_list']})
+    mp3_div = mp3_list_div.find_all_next('div', {'class': ['text', ' ']})
     for div in mp3_div:
         title = div.a.get('title')  # 获得节目名称
         id = div.a.get('href').split('/')[-1]  # 获得节目ID
@@ -45,7 +46,7 @@ def download_mp3(id):
     # 替换文件名中的特殊字符
     title = mp3_info['title'].replace('\"', '“').replace(':', '：')
     filename = '{}.m4a'.format(title)
-    filename = 'Sync/mp3/{}.m4a'.format(title)
+    # filename = 'Sync/mp3/{}.m4a'.format(title)
     path = mp3_info['play_path']
 
     if os.path.exists(filename):
@@ -59,7 +60,7 @@ def download_mp3(id):
             filesize = int(response.headers.get('content-length')) / 1000000.0
             print('--- 正在下载 {} : {.2f} MB'.format(filename, filesize))
 
-            for block in response.iter_content(1024):       # chunk_size = 1024
+            for block in response.iter_content(1024):  # chunk_size = 1024
                 f.write(block)
             return '- {}    已下载\n'.format(title)
 
@@ -79,8 +80,8 @@ def download_ablum(num=1):
         # print(i['id'])
         desp += download_mp3(i['id'])
     print(desp)
-    
-    with open('web_monitor/config.json', encoding='utf-8') as f:
+
+    with open('/home/pi/config.json', encoding='utf-8') as f:
         config = json.load(f)
         key = config['ftqq']
         print(key)
